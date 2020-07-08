@@ -1,0 +1,15 @@
+{
+    "Error: The C-Echo has failed!": "Galat: C-Echo telah gagal!",
+    "The C-Echo has succeeded!": "C-Echo telah berhasil!",
+    "Echo result": "Hasil gema",
+    "Error during query (C-Find)": "Galat selama permintaan (C-Find)",
+    "Accession number: ": "Nomor aksesi: ",
+    "Birth date: ": "Tanggal lahir: ",
+    "Patient sex: ": "Pasien seks: ",
+    "Study description: ": "Deskripsi studi: ",
+    "Study date: ": "Tanggal studi: ",
+    "Retrieve all study": "Ambil semua studi",
+    "Modality: ": "Modalitas: ",
+    "Protocol Name: ": "Nama protokol: ",
+    "Error during retrieve": "Kesalahan selama mengambil"
+}

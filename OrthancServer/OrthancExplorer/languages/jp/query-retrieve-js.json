@@ -1,0 +1,15 @@
+{
+    "Error: The C-Echo has failed!": "エラー: C エコーに失敗しました!",
+    "The C-Echo has succeeded!": "Cエコーが成功しました!",
+    "Echo result": "エコー結果",
+    "Error during query (C-Find)": "クエリ中にエラーが発生しました (C-検索)",
+    "Accession number: ": "加盟番号: ",
+    "Birth date: ": "誕生日: ",
+    "Patient sex: ": "患者のセックス: ",
+    "Study description: ": "研究の説明: ",
+    "Study date: ": "研究日: ",
+    "Retrieve all study": "すべてのスタディを取得",
+    "Modality: ": "モダリティ: ",
+    "Protocol Name: ": "プロトコル名: ",
+    "Error during retrieve": "取得中にエラーが発生しました"
+}

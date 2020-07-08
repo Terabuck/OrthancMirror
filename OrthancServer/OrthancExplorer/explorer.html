@@ -33,633 +33,526 @@
   <script src="explorer.js"></script>
   <script src="query-retrieve.js"></script>
   <script src="../plugins/explorer.js"></script>
+  
+    <!-- * localization script src added to original Orthanc's BEGINS here * -->
+    <script src="libs/angular/angular.min.js"></script>
+    <script src="libs/angular/angular-cookies.min.js"></script>
+    <script src="libs/angular/angular-sanitize.min.js"></script>
+    <script src="libs/angular/angular-translate.min.js"></script>
+    <script src="libs/angular/angular-translate-storage-cookie.min.js"></script>
+    <script src="libs/angular/angular-translate-storage-local.min.js"></script>
+    <script src="libs/angular/angular-translate-loader-partial.min.js"></script>
+    <script src="libs/angular.translate.app.js"></script>
+    <!-- * localization script src ENDS here * -->
 </head>
 
-<body>
-  <div data-role="page" id="lookup">
-    <div data-role="header">
-      <h1><span class="orthanc-name"></span>Lookup studies</h1>
-      <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left">
-        <a href="#lookup" data-icon="arrow-r" data-role="button" data-direction="reverse">Lookup</a>
-        <a href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">Plugins</a>
-      </div>
-      <div data-type="horizontal" data-role="controlgroup" class="ui-btn-right">
-        <a href="#upload" data-icon="gear" data-role="button">Upload</a>
-        <a href="#query-retrieve" data-icon="search" data-role="button">Query/Retrieve</a>
-        <a href="#jobs" data-icon="refresh" data-role="button" data-direction="reverse">Jobs</a>
-      </div>
-    </div>
-    <div data-role="content">
-      <div data-role="content" id="content" style="padding:0px">
-        <p align="center">
-          <a href="http://www.orthanc-server.com/" target="_blank" alt="Orthanc homepage">
-            <img src="orthanc-logo.png" alt="Orthanc" style="max-width:100%" />
-          </a>
-        </p>
-      </div>
-      
-      <form data-ajax="false" id="lookup-form">
-        <div data-role="fieldcontain">
-          <label for="lookup-patient-id">Patient ID:</label>
-          <input type="text" name="lookup-patient-id" id="lookup-patient-id" value="" />
-        </div>
-
-        <div data-role="fieldcontain">
-          <label for="lookup-patient-name">Patient Name:</label>
-          <input type="text" name="lookup-patient-name" id="lookup-patient-name" value="" />
-        </div>
-
-        <div data-role="fieldcontain">
-          <label for="lookup-accession-number">Accession Number:</label>
-          <input type="text" name="lookup-accession-number" id="lookup-accession-number" value="" />
-        </div>
-
-        <div data-role="fieldcontain">
-          <label for="lookup-study-description">Study Description:</label>
-          <input type="text" name="lookup-study-description" id="lookup-study-description" value="" />
-        </div>
-
-        <div data-role="fieldcontain">
-          <label for="lookup-study-date">Study Date:</label>
-          <select name="lookup-study-date" id="lookup-study-date">
-          </select>
-        </div>
-
-        <fieldset class="ui-grid-b">
-          <div class="ui-block-a">
-            <a href="#find-patients" data-role="button" data-theme="b" data-direction="reverse">All patients</a>
-          </div>
-          <div class="ui-block-b">
-            <a href="#find-studies" data-role="button" data-theme="b" data-direction="reverse">All studies</a>
-          </div>
-          <div class="ui-block-c">
-            <button id="lookup-submit" type="submit" data-theme="e">Do lookup</button>
-          </div>
-        </fieldset>
-        <div>&nbsp;</div>
-      </form>
-      <div id="lookup-result">
-        <div id="lookup-alert">
-          <div class="ui-bar ui-bar-e">
-            <h3>Warning:</h3> Your lookup led to many results!
-            Showing only <span id="lookup-count">?</span> studies to
-            avoid performance issue. Please make your query more
-            specific, then relaunch the lookup.
-          </div>
-          <div>&nbsp;</div>
-        </div>
-        <ul data-role="listview" data-inset="true" data-filter="true">
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <div data-role="page" id="find-patients">
-    <div data-role="header">
-      <h1><span class="orthanc-name"></span>All patients</h1>
-      <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left">
-        <a href="#lookup" data-icon="arrow-r" data-role="button" data-direction="reverse">Lookup</a>
-        <a href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">Plugins</a>
-      </div>
-      <div data-type="horizontal" data-role="controlgroup" class="ui-btn-right">
-        <a href="#upload" data-icon="gear" data-role="button">Upload</a>
-        <a href="#query-retrieve" data-icon="search" data-role="button">Query/Retrieve</a>
-        <a href="#jobs" data-icon="refresh" data-role="button" data-direction="reverse">Jobs</a>
-      </div>
-    </div>
-    <div data-role="content">
-      <div id="alert-patients">
-        <div class="ui-bar ui-bar-e">
-          <h3>Warning:</h3> This is a large Orthanc server. Showing
-          only <span id="count-patients">?</span> patients to avoid
-          performance issue. Make sure to use lookup if targeting
-          specific patients!
-        </div>
-        <div>&nbsp;</div>
-      </div>
-      <ul id="all-patients" data-role="listview" data-inset="true" data-filter="true">
-      </ul>
-    </div>
-  </div>
-
-  <div data-role="page" id="find-studies">
-    <div data-role="header">
-      <h1><span class="orthanc-name"></span>All studies</h1>
-      <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left">
-        <a href="#lookup" data-icon="arrow-r" data-role="button" data-direction="reverse">Lookup</a>
-        <a href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">Plugins</a>
-      </div>
-      <div data-type="horizontal" data-role="controlgroup" class="ui-btn-right">
-        <a href="#upload" data-icon="gear" data-role="button">Upload</a>
-        <a href="#query-retrieve" data-icon="search" data-role="button">Query/Retrieve</a>
-        <a href="#jobs" data-icon="refresh" data-role="button" data-direction="reverse">Jobs</a>
-      </div>
-    </div>
-    <div data-role="content">
-      <div id="alert-studies">
-        <div class="ui-bar ui-bar-e">
-          <h3>Warning:</h3> This is a large Orthanc server. Showing
-          only <span id="count-studies">?</span> studies to avoid
-          performance issue. Make sure to use lookup if targeting
-          specific studies!
-        </div>
-        <div>&nbsp;</div>
-      </div>
-      <ul id="all-studies" data-role="listview" data-inset="true" data-filter="true">
-      </ul>
-    </div>
-  </div>
-
-  <div data-role="page" id="upload">
-    <div data-role="header">
-      <h1><span class="orthanc-name"></span>Upload DICOM files</h1>
-      <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left">
-        <a href="#lookup" data-icon="arrow-r" data-role="button" data-direction="reverse">Lookup</a>
-        <a href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">Plugins</a>
-      </div>
-    </div>
-    <div data-role="content">
-      <div>
-        <!-- It's very difficult to style a "file" input so we
-        actually hide it and create a "proxy" button that is
-        forwarding its click to the "file" input -->
-        <input id="fileupload" type="file" name="files[]" data-url="../instances/" style="display:none" multiple>
-      </div>
-      <p>
-        <ul data-role="listview" data-inset="true">
-          <li id="fileupload-proxy" onclick="$('#fileupload').click()" data-icon="arrow-r" data-theme="e">
-            <a href="#">Select files to upload ...</a>
-          </li>
-          <li data-icon="arrow-r" data-theme="e"><a href="#" id="upload-button">Start the upload</a></li>
-          <!--li data-icon="gear" data-theme="e"><a href="#" id="upload-abort" class="ui-disabled">Abort the current upload</a></li-->
-          <li data-icon="delete" data-theme="d"><a href="#" id="upload-clear">Clear the pending uploads</a></li>
-        </ul>
-        <div id="progress" class="ui-corner-all">
-          <span class="bar ui-corner-all"></span>
-          <div class="label"></div>
-        </div>
-      </p>
-      <div class="ui-bar ui-bar-e" id="issue-21-warning">
-        <h3>Warning:</h3> Orthanc issue #21: On Firefox, especially on
-        Linux & OSX systems, files might be missing if using
-        drag-and-drop. Please use the "Select files to upload" button
-        instead, or use the command-line "ImportDicomFiles.py" script.
-      </div>
-      <ul id="upload-list" data-role="listview" data-inset="true">
-        <li data-role="list-divider">Drag and drop DICOM files here</li>
-      </ul>
-    </div>
-  </div>
-
-  <div data-role="page" id="patient">
-    <div data-role="header">
-      <h1><span class="orthanc-name"></span>Patient</h1>
-      <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left">
-        <a href="#lookup" data-icon="arrow-r" data-role="button" data-direction="reverse">Lookup</a>
-        <a href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">Plugins</a>
-      </div>
-      <div data-type="horizontal" data-role="controlgroup" class="ui-btn-right">
-        <a href="#upload" data-icon="gear" data-role="button">Upload</a>
-        <a href="#query-retrieve" data-icon="search" data-role="button">Query/Retrieve</a>
-        <a href="#jobs" data-icon="refresh" data-role="button" data-direction="reverse">Jobs</a>
-      </div>
-    </div>
-    <div data-role="content">
-      <div class="ui-grid-a">
-        <div class="ui-block-a" style="width:30%">
-          <div style="padding-right:10px">
-            <ul data-role="listview" data-inset="true" data-theme="a" id="patient-info">
-            </ul>
-            <p>
-              <div class="switch-container">
-                <select name="protection" id="protection" data-role="slider">
-                  <option value="off">Unprotected</option>
-                  <option value="on">Protected</option>
-                </select>
-              </div>
-            </p>
-            <ul data-role="listview" data-inset="true" data-theme="d" data-divider-theme="c">
-              <li data-role="list-divider">Interact</li>
-              <li data-icon="delete"><a href="#" id="patient-delete">Delete this patient</a></li>
-              <li data-icon="forward"><a href="#" id="patient-store">Send to remote modality</a></li>
-              <li data-icon="star"><a href="#" id="patient-anonymize">Anonymize</a></li>
-            </ul>
-
-            <ul data-role="listview" data-inset="true" data-theme="d" data-divider-theme="c">
-              <li data-role="list-divider">Access</li>
-              <li data-icon="info" data-theme="e" style="display:none">
-                <a href="#" id="patient-anonymized-from">Before anonymization</a>
-              </li>
-              <li data-icon="info" data-theme="e" style="display:none">
-                <a href="#" id="patient-modified-from">Before modification</a>
-              </li>
-              <li data-icon="gear"><a href="#" id="patient-archive">Download ZIP</a></li>
-              <li data-icon="gear"><a href="#" id="patient-media">Download DICOMDIR</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="ui-block-b" style="width:70%">
-          <div style="padding:10px">
-            <ul id="list-studies" data-role="listview" data-inset="true" data-filter="true">
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div data-role="page" id="study">
-    <div data-role="header">
-      <h1>
-        <span class="orthanc-name"></span>
-        <a href="#" class="patient-link">Patient</a> &raquo;
-        Study
-      </h1>
-      <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left">
-        <a href="#lookup" data-icon="arrow-r" data-role="button" data-direction="reverse">Lookup</a>
-        <a href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">Plugins</a>
-      </div>
-      <div data-type="horizontal" data-role="controlgroup" class="ui-btn-right">
-        <a href="#upload" data-icon="gear" data-role="button">Upload</a>
-        <a href="#query-retrieve" data-icon="search" data-role="button">Query/Retrieve</a>
-        <a href="#jobs" data-icon="refresh" data-role="button" data-direction="reverse">Jobs</a>
-      </div>
-    </div>
-    <div data-role="content">
-      <div class="ui-grid-a">
-        <div class="ui-block-a" style="width:30%">
-          <div style="padding-right:10px">
-            <ul data-role="listview" data-inset="true" data-theme="a" id="study-info">
-            </ul>
-
-            <ul data-role="listview" data-inset="true" data-theme="d" data-divider-theme="c">
-              <li data-role="list-divider">Interact</li>
-              <li data-icon="delete"><a href="#" id="study-delete">Delete this study</a></li>
-              <li data-icon="forward"><a href="#" id="study-store">Send to DICOM modality</a></li>
-              <li data-icon="star"><a href="#" id="study-anonymize">Anonymize</a></li>
-            </ul>
-
-            <ul data-role="listview" data-inset="true" data-theme="d" data-divider-theme="c">
-              <li data-role="list-divider">Access</li>
-              <li data-icon="info" data-theme="e" style="display:none">
-                <a href="#" id="study-anonymized-from">Before anonymization</a>
-              </li>
-              <li data-icon="info" data-theme="e" style="display:none">
-                <a href="#" id="study-modified-from">Before modification</a>
-              </li>
-              <li data-icon="gear"><a href="#" id="study-archive">Download ZIP</a></li>
-              <li data-icon="gear"><a href="#" id="study-media">Download DICOMDIR</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="ui-block-b" style="width:70%">
-          <div style="padding:10px">
-            <ul id="list-series" data-role="listview" data-inset="true" data-filter="true">
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div data-role="page" id="series">
-    <div data-role="header">
-      <h1>
-        <span class="orthanc-name"></span>
-        <a href="#" class="patient-link">Patient</a> &raquo;
-        <a href="#" class="study-link">Study</a> &raquo;
-        Series
-      </h1>
-      <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left">
-        <a href="#lookup" data-icon="arrow-r" data-role="button" data-direction="reverse">Lookup</a>
-        <a href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">Plugins</a>
-      </div>
-      <div data-type="horizontal" data-role="controlgroup" class="ui-btn-right">
-        <a href="#upload" data-icon="gear" data-role="button">Upload</a>
-        <a href="#query-retrieve" data-icon="search" data-role="button">Query/Retrieve</a>
-        <a href="#jobs" data-icon="refresh" data-role="button" data-direction="reverse">Jobs</a>
-      </div>
-    </div>
-    <div data-role="content">
-      <div class="ui-grid-a">
-        <div class="ui-block-a" style="width:30%">
-          <div style="padding-right:10px">
-            <ul data-role="listview" data-inset="true" data-theme="a" id="series-info">
-            </ul>
-
-            <ul data-role="listview" data-inset="true" data-theme="d" data-divider-theme="c">
-              <li data-role="list-divider">Interact</li>
-              <li data-icon="delete"><a href="#" id="series-delete">Delete this series</a></li>
-              <li data-icon="forward"><a href="#" id="series-store">Send to DICOM modality</a></li>
-              <li data-icon="star"><a href="#" id="series-anonymize">Anonymize</a></li>
-            </ul>
-
-            <ul data-role="listview" data-inset="true" data-theme="d" data-divider-theme="c">
-              <li data-role="list-divider">Access</li>
-              <li data-icon="info" data-theme="e" style="display:none">
-                <a href="#" id="series-anonymized-from">Before anonymization</a>
-              </li>
-              <li data-icon="info" data-theme="e" style="display:none">
-                <a href="#" id="series-modified-from">Before modification</a>
-              </li>
-              <li data-icon="search"><a href="#" id="series-preview">Preview this series</a></li>
-              <li data-icon="gear"><a href="#" id="series-archive">Download ZIP</a></li>
-              <li data-icon="gear"><a href="#" id="series-media">Download DICOMDIR</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="ui-block-b" style="width:70%">
-          <div style="padding:10px">
-            <ul id="list-instances" data-role="listview" data-inset="true" data-filter="true">
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div data-role="page" id="instance">
-    <div data-role="header">
-      <h1>
-        <span class="orthanc-name"></span>
-        <a href="#" class="patient-link">Patient</a> &raquo;
-        <a href="#" class="study-link">Study</a> &raquo;
-        <a href="#" class="series-link">Series</a> &raquo;
-        Instance
-      </h1>
-      <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left">
-        <a href="#lookup" data-icon="arrow-r" data-role="button" data-direction="reverse">Lookup</a>
-        <a href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">Plugins</a>
-      </div>
-      <div data-type="horizontal" data-role="controlgroup" class="ui-btn-right">
-        <a href="#upload" data-icon="gear" data-role="button">Upload</a>
-        <a href="#query-retrieve" data-icon="search" data-role="button">Query/Retrieve</a>
-        <a href="#jobs" data-icon="refresh" data-role="button" data-direction="reverse">Jobs</a>
-      </div>
-    </div>
-    <div data-role="content">
-      <div class="ui-grid-a">
-        <div class="ui-block-a" style="width:30%">
-          <div style="padding-right:10px">
-            <ul data-role="listview" data-inset="true" data-theme="a" id="instance-info">
-            </ul>
-
-            <ul data-role="listview" data-inset="true" data-theme="d" data-divider-theme="c">
-              <li data-role="list-divider">Interact</li>
-              <li data-icon="delete"><a href="#" id="instance-delete">Delete this instance</a></li>
-              <li data-icon="forward"><a href="#" id="instance-store">Send to DICOM modality</a></li>
-            </ul>
-
-            <ul data-role="listview" data-inset="true" data-theme="d" data-divider-theme="c">
-              <li data-role="list-divider">Access</li>
-              <li data-icon="info" data-theme="e" style="display:none">
-                <a href="#" id="instance-anonymized-from">Before anonymization</a>
-              </li>
-              <li data-icon="info" data-theme="e" style="display:none">
-                <a href="#" id="instance-modified-from">Before modification</a>
-              </li>
-              <li data-icon="arrow-d"><a href="#" id="instance-download-dicom">Download the DICOM file</a></li>
-              <li data-icon="arrow-d"><a href="#" id="instance-download-json">Download the JSON file</a></li>
-              <li data-icon="search"><a href="#" id="instance-preview">Preview the instance</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="ui-block-b" style="width:70%">
-          <div style="padding:10px">
-            <div class="ui-body ui-body-b">
-              <h1>DICOM Tags</h1>
-              <p align="right">
-                <input type="checkbox" id="show-tag-name" checked="checked" class="custom" data-mini="true" />
-                <label for="show-tag-name">Show tag description</label>
-              </p>
-              <div id="dicom-tree"></div>
+<!-- * localization ng-app & ng-controller definition * -->     
+<body class="ng-cloak" ng-app="app" ng-controller="AppController" ng-cloak></body>
+   
+    <div data-role="page" id="lookup">
+        <div data-role="header">
+            <h1><span class="orthanc-name"></span>{{ 'Lookup studies' | translate }}</h1>
+            <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left">
+                     <a href="#lookup" data-icon="arrow-r" data-role="button" data-direction="reverse">{{ 'Lookup' | translate }}</a>
+                <a href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">{{ 'Plugins' | translate }}</a>
             </div>
-          </div>
+            <div data-type="horizontal" data-role="controlgroup" class="ui-btn-right">
+                <a href="#upload" data-icon="gear" data-role="button">{{ 'Upload' | translate }}</a>
+                <a href="#query-retrieve" data-icon="search" data-role="button">{{ 'Query/Retrieve' | translate }}</a>
+                <a href="#jobs" data-icon="refresh" data-role="button" data-direction="reverse">{{ 'Jobs' | translate }}</a>
+                    <!-- * localization select BEGINS here * -->
+                    <select langname="lang" ng-options="lang.langname for lang in languages" ng-change="updateLang()" ng-model="langselected" data-iconpos="left" data-mini="true">
+                    <option>🌐</option>
+                    </select>
+                    <!-- * localization select ENDS here * -->
+             </div>
         </div>
-      </div>
+        <div data-role="content">
+            <div data-role="content" id="content" style="padding:0px">
+                <p align="center"><a href="http://www.orthanc-server.com/" target="_blank" alt="Orthanc homepage"><img
+                            src="orthanc-logo.png" alt="Orthanc" style="max-width:100%" /></a></p>
+            </div>
+            <form data-ajax="false" id="lookup-form">
+                <div data-role="fieldcontain"><label for="lookup-patient-id">{{ 'Patient ID:' | translate }}</label><input
+                        type="text" name="lookup-patient-id" id="lookup-patient-id" value="" /></div>
+                <div data-role="fieldcontain"><label for="lookup-patient-name">{{ 'Patient Name:' | translate }}</label><input
+                        type="text" name="lookup-patient-name" id="lookup-patient-name" value="" /></div>
+                <div data-role="fieldcontain"><label
+                        for="lookup-accession-number">{{ 'Accession Number:' | translate }}</label><input type="text"
+                        name="lookup-accession-number" id="lookup-accession-number" value="" /></div>
+                <div data-role="fieldcontain"><label
+                        for="lookup-study-description">{{ 'Study Description:' | translate }}</label><input type="text"
+                        name="lookup-study-description" id="lookup-study-description" value="" /></div>
+                <div data-role="fieldcontain" ><label for="lookup-study-date">{{ 'Study Date:' | translate }}</label><select
+                        name="lookup-study-date" id="lookup-study-date"></select></div>
+                <fieldset class="ui-grid-b">
+                    <div class="ui-block-a"><a href="#find-patients" data-role="button" data-theme="b"
+                            data-direction="reverse">{{ 'All patients' | translate }}</a></div>
+                    <div class="ui-block-b"><a href="#find-studies" data-role="button" data-theme="b"
+                            data-direction="reverse">{{ 'All studies' | translate }}</a></div>
+                    <div class="ui-block-c"><button id="lookup-submit" type="submit"
+                            data-theme="e">{{ 'Do lookup' | translate }}</button></div>
+                </fieldset>
+                <div>&nbsp;</div>
+            </form>
+            <div id="lookup-result">
+                <div id="lookup-alert">
+                    <div class="ui-bar ui-bar-e">
+                        <h3>{{ 'Warning:' | translate }}</h3>{{ 'Your lookup led to many results! Showing only' | translate }}<span
+                            id="lookup-count">?</span>{{ 'studies to avoid performance issue. Please make your query more specific, then relaunch the lookup.' | translate }}
+                    </div>
+                    <div>&nbsp;</div>
+                </div>
+                <ul data-role="listview" data-inset="true" data-filter="true"></ul>
+            </div>
+        </div>
     </div>
-  </div>
-
-  <div data-role="page" id="plugins">
-    <div data-role="header">
-      <h1><span class="orthanc-name"></span>Plugins</h1>
-      <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left">
-        <a href="#lookup" data-icon="arrow-r" data-role="button" data-direction="reverse">Lookup</a>
-        <a href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">Plugins</a>
-      </div>
+    <div data-role="page" id="find-patients">
+        <div data-role="header">
+            <h1><span class="orthanc-name"></span>{{ 'All patients' | translate }}</h1>
+            <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left"><a href="#lookup"
+                    data-icon="arrow-r" data-role="button" data-direction="reverse">{{ 'Lookup' | translate }}</a><a
+                    href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">{{ 'Plugins' | translate }}</a>
+            </div>
+            <div data-type="horizontal" data-role="controlgroup" class="ui-btn-right"><a href="#upload" data-icon="gear"
+                    data-role="button">{{ 'Upload' | translate }}</a><a href="#query-retrieve" data-icon="search"
+                    data-role="button">{{ 'Query/Retrieve' | translate }}</a><a href="#jobs" data-icon="refresh"
+                    data-role="button" data-direction="reverse">{{ 'Jobs' | translate }}</a></div>
+        </div>
+        <div data-role="content">
+            <div id="alert-patients">
+                <div class="ui-bar ui-bar-e">
+                    <h3>{{ 'Warning:' | translate }}</h3>{{ 'This is a large Orthanc server. Showing only' | translate }} <span
+                        id="count-patients">?</span>{{ 'patients to avoid performance issue. Make sure to use lookup if targeting specific patients!' | translate }}
+                </div>
+                <div>&nbsp;</div>
+            </div>
+            <ul id="all-patients" data-role="listview" data-inset="true" data-filter="true"></ul>
+        </div>
     </div>
-    <div data-role="content">
-      <ul id="all-plugins" data-role="listview" data-inset="true" data-filter="true">
-      </ul>
+    <div data-role="page" id="find-studies">
+        <div data-role="header">
+            <h1><span class="orthanc-name"></span>{{ 'All studies' | translate }}</h1>
+            <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left"><a href="#lookup"
+                    data-icon="arrow-r" data-role="button" data-direction="reverse">{{ 'Lookup' | translate }}</a><a
+                    href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">{{ 'Plugins' | translate }}</a>
+            </div>
+            <div data-type="horizontal" data-role="controlgroup" class="ui-btn-right"><a href="#upload" data-icon="gear"
+                    data-role="button">{{ 'Upload' | translate }}</a><a href="#query-retrieve" data-icon="search"
+                    data-role="button">{{ 'Query/Retrieve' | translate }}</a><a href="#jobs" data-icon="refresh"
+                    data-role="button" data-direction="reverse">{{ 'Jobs' | translate }}</a></div>
+        </div>
+        <div data-role="content">
+            <div id="alert-studies">
+                <div class="ui-bar ui-bar-e">
+                    <h3>{{ 'Warning:' | translate }}</h3>{{ 'This is a large Orthanc server. Showing only' | translate }} <span
+                        id="count-studies">?</span>{{ 'studies to avoid performance issue. Make sure to use lookup if targeting specific studies!' | translate }}
+                </div>
+                <div>&nbsp;</div>
+            </div>
+            <ul id="all-studies" data-role="listview" data-inset="true" data-filter="true"></ul>
+        </div>
     </div>
-  </div>
-
-  <div data-role="page" id="query-retrieve">
-    <div data-role="header">
-      <h1><span class="orthanc-name"></span>DICOM Query/Retrieve (1/4)</h1>
-      <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left">
-        <a href="#lookup" data-icon="arrow-r" data-role="button" data-direction="reverse">Lookup</a>
-        <a href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">Plugins</a>
-      </div>
+    <div data-role="page" id="upload">
+        <div data-role="header">
+            <h1><span class="orthanc-name"></span>{{ 'Upload DICOM files' | translate }}</h1>
+            <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left"><a href="#lookup"
+                    data-icon="arrow-r" data-role="button" data-direction="reverse">{{ 'Lookup' | translate }}</a><a
+                    href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">{{ 'Plugins' | translate }}</a>
+            </div>
+        </div>
+        <div data-role="content">
+            <div><input id="fileupload" type="file" name="files[]" data-url="../instances/" style="display:none"
+                    multiple></div>
+            <p>
+                <ul data-role="listview" data-inset="true">
+                    <li id="fileupload-proxy" onclick="$('#fileupload').click()" data-icon="arrow-r" data-theme="e"><a
+                            href="#">{{ 'Select files to upload ...' | translate }}</a></li>
+                    <li data-icon="arrow-r" data-theme="e"><a href="#" id="upload-button">{{ 'Start the upload' | translate }}</a>
+                    </li>
+                    <li data-icon="delete" data-theme="d"><a href="#"
+                            id="upload-clear">{{ 'Clear the pending uploads' | translate }}</a></li>
+                </ul>
+                <div id="progress" class="ui-corner-all"><span class="bar ui-corner-all"></span>
+                    <div class="label"></div>
+                </div>
+            </p>
+            <div class="ui-bar ui-bar-e" id="issue-21-warning">
+                <h3>{{ 'Warning:' | translate }}</h3>
+                <!-- Missing space in the original file #21:On -->
+                {{ 'Orthanc issue #21: On Firefox, especially on Linux & OSX systems, files might be missing if using drag-and-drop. Please use the "Select files to upload" button instead, or use the command-line "ImportDicomFiles.py" script.' | translate }}
+            </div>
+            <ul id="upload-list" data-role="listview" data-inset="true">
+                <li data-role="list-divider">{{ 'Drag and drop DICOM files here' | translate }}</li>
+            </ul>
+        </div>
     </div>
-    <div data-role="content">
-      <form data-ajax="false">
-        <div data-role="fieldcontain">
-          <label for="qr-server">DICOM server:</label>
-          <select name="qr-server" id="qr-server">
-          </select>
+    <div data-role="page" id="patient">
+        <div data-role="header">
+            <h1><span class="orthanc-name"></span>{{ 'Patient' | translate }}</h1>
+            <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left"><a href="#lookup"
+                    data-icon="arrow-r" data-role="button" data-direction="reverse">{{ 'Lookup' | translate }}</a><a
+                    href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">{{ 'Plugins' | translate }}</a>
+            </div>
+            <div data-type="horizontal" data-role="controlgroup" class="ui-btn-right"><a href="#upload" data-icon="gear"
+                    data-role="button">{{ 'Upload' | translate }}</a><a href="#query-retrieve" data-icon="search"
+                    data-role="button">{{ 'Query/Retrieve' | translate }}</a><a href="#jobs" data-icon="refresh"
+                    data-role="button" data-direction="reverse">{{ 'Jobs' | translate }}</a></div>
         </div>
-
-        <div data-role="fieldcontain" id="qr-fields">
-          <fieldset data-role="controlgroup">
-            <legend>Field of interest:</legend>
-            <input type="radio" name="qr-field" id="qr-patient-id" value="PatientID" checked="checked" />
-            <label for="qr-patient-id">Patient ID</label>
-            <input type="radio" name="qr-field" id="qr-patient-name" value="PatientName" />
-            <label for="qr-patient-name">Patient Name</label>
-            <input type="radio" name="qr-field" id="qr-accession-number" value="AccessionNumber" />
-            <label for="qr-accession-number">Accession Number</label>
-            <input type="radio" name="qr-field" id="qr-study-description" value="StudyDescription" />
-            <label for="qr-study-description">Study Description</label>
-          </fieldset>
+        <div data-role="content">
+            <div class="ui-grid-a">
+                <div class="ui-block-a" style="width:30%">
+                    <div style="padding-right:10px">
+                        <ul data-role="listview" data-inset="true" data-theme="a" id="patient-info"></ul>
+                        <p>
+                            <div class="switch-container"><select name="protection" id="protection" data-role="slider">
+                                    <option value="off">{{ 'Unprotected' | translate }}</option>
+                                    <option value="on">{{ 'Protected' | translate }}</option>
+                                </select></div>
+                        </p>
+                        <ul data-role="listview" data-inset="true" data-theme="d" data-divider-theme="c">
+                            <li data-role="list-divider">{{ 'Interact' | translate }}</li>
+                            <li data-icon="delete"><a href="#" id="patient-delete">{{ 'Delete this patient' | translate }}</a>
+                            </li>
+                            <li data-icon="forward"><a href="#" id="patient-store">{{ 'Send to remote modality' | translate }}</a>
+                            </li>
+                            <li data-icon="star"><a href="#" id="patient-anonymize">{{ 'Anonymize' | translate }}</a></li>
+                        </ul>
+                        <ul data-role="listview" data-inset="true" data-theme="d" data-divider-theme="c">
+                            <li data-role="list-divider">{{ 'Access' | translate }}</li>
+                            <li data-icon="info" data-theme="e" style="display:none"><a href="#"
+                                    id="patient-anonymized-from">{{ 'Before anonymization' | translate }}</a></li>
+                            <li data-icon="info" data-theme="e" style="display:none"><a href="#"
+                                    id="patient-modified-from">{{ 'Before modification' | translate }}</a></li>
+                            <li data-icon="gear"><a href="#" id="patient-archive">{{ 'Download ZIP' | translate }}</a></li>
+                            <li data-icon="gear"><a href="#" id="patient-media">{{ 'Download DICOMDIR' | translate }}</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="ui-block-b" style="width:70%">
+                    <div style="padding:10px">
+                        <ul id="list-studies" data-role="listview" data-inset="true" data-filter="true"></ul>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div data-role="fieldcontain">
-          <label for="qr-value">Value for this field:</label>
-          <input type="text" name="qr-value" id="qr-value" value="*" />
+    </div>
+    <div data-role="page" id="study">
+        <div data-role="header">
+            <h1><span class="orthanc-name"></span><a href="#" class="patient-link">{{ 'Patient' | translate }}</a>&raquo;
+            {{ 'Study' | translate }}</h1>
+            <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left"><a href="#lookup"
+                    data-icon="arrow-r" data-role="button" data-direction="reverse">{{ 'Lookup' | translate }}</a><a
+                    href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">{{ 'Plugins' | translate }}</a>
+            </div>
+            <div data-type="horizontal" data-role="controlgroup" class="ui-btn-right"><a href="#upload" data-icon="gear"
+                    data-role="button">{{ 'Upload' | translate }}</a><a href="#query-retrieve" data-icon="search"
+                    data-role="button">{{ 'Query/Retrieve' | translate }}</a><a href="#jobs" data-icon="refresh"
+                    data-role="button" data-direction="reverse">{{ 'Jobs' | translate }}</a></div>
         </div>
-
-        <div data-role="fieldcontain">
-          <label for="qr-date">Study date:</label>
-          <select name="qr-date" id="qr-date">
-          </select>
+        <div data-role="content">
+            <div class="ui-grid-a">
+                <div class="ui-block-a" style="width:30%">
+                    <div style="padding-right:10px">
+                        <ul data-role="listview" data-inset="true" data-theme="a" id="study-info"></ul>
+                        <ul data-role="listview" data-inset="true" data-theme="d" data-divider-theme="c">
+                            <li data-role="list-divider">{{ 'Interact' | translate }}</li>
+                            <li data-icon="delete"><a href="#" id="study-delete">{{ 'Delete this study' | translate }}</a></li>
+                            <li data-icon="forward"><a href="#" id="study-store">{{ 'Send to DICOM modality' | translate }}</a>
+                            </li>
+                            <li data-icon="star"><a href="#" id="study-anonymize">{{ 'Anonymize' | translate }}</a></li>
+                        </ul>
+                        <ul data-role="listview" data-inset="true" data-theme="d" data-divider-theme="c">
+                            <li data-role="list-divider">{{ 'Access' | translate }}</li>
+                            <li data-icon="info" data-theme="e" style="display:none"><a href="#"
+                                    id="study-anonymized-from">{{ 'Before anonymization' | translate }}</a></li>
+                            <li data-icon="info" data-theme="e" style="display:none"><a href="#"
+                                    id="study-modified-from">{{ 'Before modification' | translate }}</a></li>
+                            <li data-icon="gear"><a href="#" id="study-archive">{{ 'Download ZIP' | translate }}</a></li>
+                            <li data-icon="gear"><a href="#" id="study-media">{{ 'Download DICOMDIR' | translate }}</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="ui-block-b" style="width:70%">
+                    <div style="padding:10px">
+                        <ul id="list-series" data-role="listview" data-inset="true" data-filter="true"></ul>
+                    </div>
+                </div>
+            </div>
         </div>
-
-        <div data-role="fieldcontain" id="qr-modalities">
-          <div data-role="fieldcontain">
-            <fieldset data-role="controlgroup" data-type="horizontal">
-              <legend>Modalities:</legend>
-              <input type="checkbox" name="CR" id="qr-cr" class="custom" /> <label for="qr-cr">CR</label>
-              <input type="checkbox" name="CT" id="qr-ct" class="custom" /> <label for="qr-ct">CT</label>
-              <input type="checkbox" name="MR" id="qr-mr" class="custom" /> <label for="qr-mr">MR</label>
-              <input type="checkbox" name="NM" id="qr-nm" class="custom" /> <label for="qr-nm">NM</label>
-              <input type="checkbox" name="PT" id="qr-pt" class="custom" /> <label for="qr-pt">PT</label>
-              <input type="checkbox" name="US" id="qr-us" class="custom" /> <label for="qr-us">US</label>
-              <input type="checkbox" name="XA" id="qr-xa" class="custom" /> <label for="qr-xa">XA</label>
-              <input type="checkbox" name="DR" id="qr-dr" class="custom" /> <label for="qr-dr">DR</label>
-              <input type="checkbox" name="DX" id="qr-dx" class="custom" /> <label for="qr-dx">DX</label>
-              <input type="checkbox" name="MG" id="qr-mg" class="custom" /> <label for="qr-mg">MG</label>
+    </div>
+    <div data-role="page" id="series">
+        <div data-role="header">
+            <h1><span class="orthanc-name"></span><a href="#" class="patient-link">{{ 'Patient' | translate }}</a>&raquo; <a
+                    href="#" class="study-link">{{ 'Study' | translate }}</a>&raquo; {{ 'Series' | translate }} </h1>
+            <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left"><a href="#lookup"
+                    data-icon="arrow-r" data-role="button" data-direction="reverse">{{ 'Lookup' | translate }}</a><a
+                    href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">{{ 'Plugins' | translate }}</a>
+            </div>
+            <div data-type="horizontal" data-role="controlgroup" class="ui-btn-right"><a href="#upload" data-icon="gear"
+                    data-role="button">{{ 'Upload' | translate }}</a><a href="#query-retrieve" data-icon="search"
+                    data-role="button">{{ 'Query/Retrieve' | translate }}</a><a href="#jobs" data-icon="refresh"
+                    data-role="button" data-direction="reverse">{{ 'Jobs' | translate }}</a></div>
+        </div>
+        <div data-role="content">
+            <div class="ui-grid-a">
+                <div class="ui-block-a" style="width:30%">
+                    <div style="padding-right:10px">
+                        <ul data-role="listview" data-inset="true" data-theme="a" id="series-info"></ul>
+                        <ul data-role="listview" data-inset="true" data-theme="d" data-divider-theme="c">
+                            <li data-role="list-divider">{{ 'Interact' | translate }}</li>
+                            <li data-icon="delete"><a href="#" id="series-delete">{{ 'Delete this series' | translate }}</a></li>
+                            <li data-icon="forward"><a href="#" id="series-store">{{ 'Send to DICOM modality' | translate }}</a>
+                            </li>
+                            <li data-icon="star"><a href="#" id="series-anonymize">{{ 'Anonymize' | translate }}</a></li>
+                        </ul>
+                        <ul data-role="listview" data-inset="true" data-theme="d" data-divider-theme="c">
+                            <li data-role="list-divider">{{ 'Access' | translate }}</li>
+                            <li data-icon="info" data-theme="e" style="display:none"><a href="#"
+                                    id="series-anonymized-from">{{ 'Before anonymization' | translate }}</a></li>
+                            <li data-icon="info" data-theme="e" style="display:none"><a href="#"
+                                    id="series-modified-from">{{ 'Before modification' | translate }}</a></li>
+                            <li data-icon="search"><a href="#" id="series-preview">{{ 'Preview this series' | translate }}</a>
+                            </li>
+                            <li data-icon="gear"><a href="#" id="series-archive">{{ 'Download ZIP' | translate }}</a></li>
+                            <li data-icon="gear"><a href="#" id="series-media">{{ 'Download DICOMDIR' | translate }}</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="ui-block-b" style="width:70%">
+                    <div style="padding:10px">
+                        <ul id="list-instances" data-role="listview" data-inset="true" data-filter="true"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-role="page" id="instance">
+        <div data-role="header">
+            <h1><span class="orthanc-name"></span><a href="#" class="patient-link">{{ 'Patient' | translate }}</a>&raquo; <a
+                    href="#" class="study-link">{{ 'Study' | translate }}</a>&raquo; <a href="#"
+                    class="series-link">{{ 'Series' | translate }}</a>&raquo; {{ 'Instance' | translate }} </h1>
+            <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left"><a href="#lookup"
+                    data-icon="arrow-r" data-role="button" data-direction="reverse">{{ 'Lookup' | translate }}</a><a
+                    href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">{{ 'Plugins' | translate }}</a>
+            </div>
+            <div data-type="horizontal" data-role="controlgroup" class="ui-btn-right"><a href="#upload" data-icon="gear"
+                    data-role="button">{{ 'Upload' | translate }}</a><a href="#query-retrieve" data-icon="search"
+                    data-role="button">{{ 'Query/Retrieve' | translate }}</a><a href="#jobs" data-icon="refresh"
+                    data-role="button" data-direction="reverse">{{ 'Jobs' | translate }}</a></div>
+        </div>
+        <div data-role="content">
+            <div class="ui-grid-a">
+                <div class="ui-block-a" style="width:30%">
+                    <div style="padding-right:10px">
+                        <ul data-role="listview" data-inset="true" data-theme="a" id="instance-info"></ul>
+                        <ul data-role="listview" data-inset="true" data-theme="d" data-divider-theme="c">
+                            <li data-role="list-divider">{{ 'Interact' | translate }}</li>
+                            <li data-icon="delete"><a href="#" id="instance-delete">{{ 'Delete this instance' | translate }}</a>
+                            </li>
+                            <li data-icon="forward"><a href="#" id="instance-store">{{ 'Send to DICOM modality' | translate }}</a>
+                            </li>
+                        </ul>
+                        <ul data-role="listview" data-inset="true" data-theme="d" data-divider-theme="c">
+                            <li data-role="list-divider">{{ 'Access' | translate }}</li>
+                            <li data-icon="info" data-theme="e" style="display:none"><a href="#"
+                                    id="instance-anonymized-from">{{ 'Before anonymization' | translate }}</a></li>
+                            <li data-icon="info" data-theme="e" style="display:none"><a href="#"
+                                    id="instance-modified-from">{{ 'Before modification' | translate }}</a></li>
+                            <li data-icon="arrow-d"><a href="#"
+                                    id="instance-download-dicom">{{ 'Download the DICOM file' | translate }}</a></li>
+                            <li data-icon="arrow-d"><a href="#"
+                                    id="instance-download-json">{{ 'Download the JSON file' | translate }}</a></li>
+                            <li data-icon="search"><a href="#" id="instance-preview">{{ 'Preview the instance' | translate }}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="ui-block-b" style="width:70%">
+                    <div style="padding:10px">
+                        <div class="ui-body ui-body-b">
+                            <h1>{{ 'DICOM Tags' | translate }}</h1>
+                            <p align="right"><input type="checkbox" id="show-tag-name" checked="checked" class="custom"
+                                    data-mini="true" /><label for="show-tag-name">{{ 'Show tag description' | translate }}</label>
+                            </p>
+                            <div id="dicom-tree"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-role="page" id="plugins">
+        <div data-role="header">
+            <h1><span class="orthanc-name"></span>{{ 'Plugins' | translate }}</h1>
+            <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left"><a href="#lookup"
+                    data-icon="arrow-r" data-role="button" data-direction="reverse">{{ 'Lookup' | translate }}</a><a
+                    href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">{{ 'Plugins' | translate }}</a>
+            </div>
+        </div>
+        <div data-role="content">
+            <ul id="all-plugins" data-role="listview" data-inset="true" data-filter="true"></ul>
+        </div>
+    </div>
+    <div data-role="page" id="query-retrieve">
+        <div data-role="header">
+            <h1><span class="orthanc-name"></span>{{ 'DICOM Query/Retrieve' | translate }} (1/4)</h1>
+            <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left"><a href="#lookup"
+                    data-icon="arrow-r" data-role="button" data-direction="reverse">{{ 'Lookup' | translate }}</a><a
+                    href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">{{ 'Plugins' | translate }}</a>
+            </div>
+        </div>
+        <div data-role="content">
+            <form data-ajax="false">
+                <div data-role="fieldcontain"><label for="qr-server">{{ 'DICOM server:' | translate }}</label><select
+                        name="qr-server" id="qr-server"></select></div>
+                <div data-role="fieldcontain" id="qr-fields">
+                    <fieldset data-role="controlgroup">
+                        <legend>{{ 'Field of interest:' | translate }}</legend><input type="radio" name="qr-field"
+                            id="qr-patient-id" value="PatientID" checked="checked" /><label
+                            for="qr-patient-id">{{ 'Patient ID' | translate }}</label><input type="radio" name="qr-field"
+                            id="qr-patient-name" value="PatientName" /><label
+                            for="qr-patient-name">{{ 'Patient Name' | translate }}</label><input type="radio" name="qr-field"
+                            id="qr-accession-number" value="AccessionNumber" /><label
+                            for="qr-accession-number">{{ 'Accession Number' | translate }}</label><input type="radio"
+                            name="qr-field" id="qr-study-description" value="StudyDescription" /><label
+                            for="qr-study-description">{{ 'Study Description' | translate }}</label>
+                    </fieldset>
+                </div>
+                <div data-role="fieldcontain"><label for="qr-value">{{ 'Value for this field:' | translate }}</label><input
+                        type="text" name="qr-value" id="qr-value" value="*" /></div>
+                <div data-role="fieldcontain"><label for="qr-date">{{ 'Study date:' | translate }}</label><select name="qr-date"
+                        id="qr-date"></select></div>
+                <div data-role="fieldcontain" id="qr-modalities">
+                    <div data-role="fieldcontain">
+                        <fieldset data-role="controlgroup" data-type="horizontal">
+                            <legend>{{ 'Modalities:' | translate }}</legend><input type="checkbox" name="CR" id="qr-cr"
+                                class="custom" /><label for="qr-cr">CR</label><input type="checkbox" name="CT"
+                                id="qr-ct" class="custom" /><label for="qr-ct">CT</label><input type="checkbox"
+                                name="MR" id="qr-mr" class="custom" /><label for="qr-mr">MR</label><input
+                                type="checkbox" name="NM" id="qr-nm" class="custom" /><label
+                                for="qr-nm">NM</label><input type="checkbox" name="PT" id="qr-pt"
+                                class="custom" /><label for="qr-pt">PT</label><input type="checkbox" name="US"
+                                id="qr-us" class="custom" /><label for="qr-us">US</label><input type="checkbox"
+                                name="XA" id="qr-xa" class="custom" /><label for="qr-xa">XA</label><input
+                                type="checkbox" name="DR" id="qr-dr" class="custom" /><label
+                                for="qr-dr">DR</label><input type="checkbox" name="DX" id="qr-dx"
+                                class="custom" /><label for="qr-dx">DX</label><input type="checkbox" name="MG"
+                                id="qr-mg" class="custom" /><label for="qr-mg">MG</label>
+                        </fieldset>
+                    </div>
+                </div>
+                <fieldset class="ui-grid-a">
+                    <div class="ui-block-a"><button id="qr-echo" data-theme="a">{{ 'Test Echo' | translate }}</button></div>
+                    <div class="ui-block-b"><button id="qr-submit" type="submit"
+                            data-theme="b">{{ 'Search studies' | translate }}</button></div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+    <div data-role="page" id="query-retrieve-2">
+        <div data-role="header">
+            <h1><span class="orthanc-name"></span>{{ 'DICOM Query/Retrieve' | translate }} (2/4)</h1>
+            <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left"><a href="#lookup"
+                    data-icon="arrow-r" data-role="button" data-direction="reverse">{{ 'Lookup' | translate }}</a><a
+                    href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">{{ 'Plugins' | translate }}</a>
+            </div><a href="#query-retrieve" data-icon="search" class="ui-btn-right"
+                data-direction="reverse">{{ 'Query/Retrieve' | translate }}</a>
+        </div>
+        <div data-role="content">
+            <ul data-role="listview" data-inset="true" data-filter="true" data-split-icon="arrow-d"
+                data-split-theme="b"></ul>
+        </div>
+    </div>
+    <div data-role="page" id="query-retrieve-3">
+        <div data-role="header">
+            <h1><span class="orthanc-name"></span>{{ 'DICOM Query/Retrieve' | translate }} (3/4)</h1>
+            <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left"><a href="#lookup"
+                    data-icon="arrow-r" data-role="button" data-direction="reverse">{{ 'Lookup' | translate }}</a><a
+                    href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">{{ 'Plugins' | translate }}</a>
+            </div><a href="#query-retrieve" data-icon="search" class="ui-btn-right"
+                data-direction="reverse">{{ 'Query/Retrieve' | translate }}</a>
+        </div>
+        <div data-role="content">
+            <ul data-role="listview" data-inset="true" data-filter="true"></ul>
+        </div>
+    </div>
+    <div data-role="page" id="query-retrieve-4">
+        <div data-role="header">
+            <h1><span class="orthanc-name"></span>{{ 'DICOM Query/Retrieve' | translate }} (4/4)</h1>
+            <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left"><a href="#lookup"
+                    data-icon="arrow-r" data-role="button" data-direction="reverse">{{ 'Lookup' | translate }}</a><a
+                    href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">{{ 'Plugins' | translate }}</a>
+            </div><a href="#query-retrieve" data-icon="search" class="ui-btn-right"
+                data-direction="reverse">{{ 'Query/Retrieve' | translate }}</a>
+        </div>
+        <div data-role="content">
+            <form data-ajax="false" id="retrieve-form">
+                <div data-role="fieldcontain"><label for="retrieve-target">{{ 'Target AET:' | translate }}</label><input
+                        type="text" name="retrieve-target" id="retrieve-target"></input></div>
+                <fieldset class="ui-grid-b">
+                    <div class="ui-block-a"></div>
+                    <div class="ui-block-b"><button id="retrieve-submit" type="submit"
+                            data-theme="b">{{ 'Retrieve' | translate }}</button></div>
+                    <div class="ui-block-c"></div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+    <div data-role="page" id="jobs">
+        <div data-role="header">
+            <h1><span class="orthanc-name"></span>{{ 'Jobs' | translate }}</h1>
+            <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left"><a href="#lookup"
+                    data-icon="arrow-r" data-role="button" data-direction="reverse">{{ 'Lookup' | translate }}</a><a
+                    href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">{{ 'Plugins' | translate }}</a>
+            </div>
+        </div>
+        <div data-role="content">
+            <ul id="all-jobs" data-role="listview" data-inset="true" data-filter="true"></ul>
+        </div>
+    </div>
+    <div data-role="page" id="job">
+        <div data-role="header">
+            <h1><span class="orthanc-name"></span>{{ 'Job' | translate }}</h1>
+            <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left"><a href="#lookup"
+                    data-icon="arrow-r" data-role="button" data-direction="reverse">{{ 'Lookup' | translate }}</a><a
+                    href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">{{ 'Plugins' | translate }}</a>
+            </div>
+            <div data-type="horizontal" data-role="controlgroup" class="ui-btn-right"><a href="#jobs"
+                    data-icon="refresh" data-role="button" data-direction="reverse">{{ 'Jobs' | translate }}</a></div>
+        </div>
+        <div data-role="content">
+            <ul data-role="listview" data-inset="true" data-filter="true" id="job-info"></ul>
+            <fieldset class="ui-grid-b">
+                <div class="ui-block-a"></div>
+                <div class="ui-block-b"><button id="job-cancel" data-theme="b">{{ 'Cancel job' | translate }}</button><button
+                        id="job-resubmit" data-theme="b">{{ 'Resubmit job' | translate }}</button><button id="job-pause"
+                        data-theme="b">{{ 'Pause job' | translate }}</button><button id="job-resume"
+                        data-theme="b">{{ 'Resume job' | translate }}</button></div>
+                <div class="ui-block-c"></div>
             </fieldset>
-          </div>
         </div>
-
-        <fieldset class="ui-grid-a">
-          <div class="ui-block-a">
-            <button id="qr-echo" data-theme="a">Test Echo</button>
-          </div>
-          <div class="ui-block-b">
-            <button id="qr-submit" type="submit" data-theme="b">Search studies</button>
-          </div>
-        </fieldset>
-      </form>
     </div>
-  </div>
-
-
-  <div data-role="page" id="query-retrieve-2">
-    <div data-role="header">
-      <h1><span class="orthanc-name"></span>DICOM Query/Retrieve (2/4)</h1>
-      <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left">
-        <a href="#lookup" data-icon="arrow-r" data-role="button" data-direction="reverse">Lookup</a>
-        <a href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">Plugins</a>
-      </div>
-      <a href="#query-retrieve" data-icon="search" class="ui-btn-right" data-direction="reverse">Query/Retrieve</a>
+    <div id="peer-store" style="display:none;" class="ui-body-c">
+        <p align="center"><b>{{ 'Sending to Orthanc peer...' | translate }}</b></p>
+        <p><img src="libs/images/ajax-loader.gif" alt="" /></p>
     </div>
-    <div data-role="content">
-      <ul data-role="listview" data-inset="true" data-filter="true" data-split-icon="arrow-d" data-split-theme="b">
-      </ul>
+    <div id="dicom-store" style="display:none;" class="ui-body-c">
+        <p align="center"><b>{{ 'Sending to DICOM modality...' | translate }}</b></p>
+        <p><img src="libs/images/ajax-loader.gif" alt="" /></p>
     </div>
-  </div>
-
-
-  <div data-role="page" id="query-retrieve-3">
-    <div data-role="header">
-      <h1><span class="orthanc-name"></span>DICOM Query/Retrieve (3/4)</h1>
-      <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left">
-        <a href="#lookup" data-icon="arrow-r" data-role="button" data-direction="reverse">Lookup</a>
-        <a href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">Plugins</a>
-      </div>
-      <a href="#query-retrieve" data-icon="search" class="ui-btn-right" data-direction="reverse">Query/Retrieve</a>
+    <div id="info-retrieve" style="display:none;" class="ui-body-c">
+        <p align="center"><b>{{ 'Retrieving images from DICOM modality...' | translate }}</b></p>
+        <p><img src="libs/images/ajax-loader.gif" alt="" /></p>
     </div>
-    <div data-role="content">
-      <ul data-role="listview" data-inset="true" data-filter="true">
-      </ul>
-    </div>
-  </div>
-
-
-  <div data-role="page" id="query-retrieve-4">
-    <div data-role="header">
-      <h1><span class="orthanc-name"></span>DICOM Query/Retrieve (4/4)</h1>
-      <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left">
-        <a href="#lookup" data-icon="arrow-r" data-role="button" data-direction="reverse">Lookup</a>
-        <a href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">Plugins</a>
-      </div>
-      <a href="#query-retrieve" data-icon="search" class="ui-btn-right" data-direction="reverse">Query/Retrieve</a>
-    </div>
-
-    <div data-role="content">
-      <form data-ajax="false" id="retrieve-form">
-        <div data-role="fieldcontain">
-          <label for="retrieve-target">Target AET:</label>
-          <input type="text" name="retrieve-target" id="retrieve-target"></input>
+    <div id="dialog" style="display:none"></div>
+    <div id="template-insecure" style="display:none">
+        <div class="warning-insecure ui-body ui-body-e">
+            <h1>{{ 'Insecure setup' | translate }}</h1>
+            <p>{{ 'Your Orthanc server is accepting remote connections, but is using the default username and password, or has user authentication explicitly turned off. Please carefully read your logs and review your configuration, especially options' | translate }} <tt>RemoteAccessAllowed</tt>,
+                <tt>AuthenticationEnabled</tt>, {{ 'and' | translate }} <tt>RegisteredUsers</tt>. </p>
         </div>
-
-        <fieldset class="ui-grid-b">
-          <div class="ui-block-a"></div>
-          <div class="ui-block-b">
-            <button id="retrieve-submit" type="submit" data-theme="b">Retrieve</button>
-          </div>
-          <div class="ui-block-c"></div>
-        </fieldset>
-      </form>
     </div>
-  </div>
-
-
-  <div data-role="page" id="jobs">
-    <div data-role="header">
-      <h1><span class="orthanc-name"></span>Jobs</h1>
-      <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left">
-        <a href="#lookup" data-icon="arrow-r" data-role="button" data-direction="reverse">Lookup</a>
-        <a href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">Plugins</a>
-      </div>
-    </div>
-    <div data-role="content">
-      <ul id="all-jobs" data-role="listview" data-inset="true" data-filter="true">
-      </ul>
-    </div>
-  </div>
-
-  <div data-role="page" id="job">
-    <div data-role="header">
-      <h1><span class="orthanc-name"></span>Job</h1>
-      <div data-type="horizontal" data-role="controlgroup" class="ui-btn-left">
-        <a href="#lookup" data-icon="arrow-r" data-role="button" data-direction="reverse">Lookup</a>
-        <a href="#plugins" data-icon="grid" data-role="button" data-direction="reverse">Plugins</a>
-      </div>
-      <div data-type="horizontal" data-role="controlgroup" class="ui-btn-right">
-        <a href="#jobs" data-icon="refresh" data-role="button" data-direction="reverse">Jobs</a>
-      </div>
-    </div>
-    <div data-role="content">
-      <ul data-role="listview" data-inset="true" data-filter="true" id="job-info">
-      </ul>
-
-      <fieldset class="ui-grid-b">
-        <div class="ui-block-a"></div>
-        <div class="ui-block-b">
-          <button id="job-cancel" data-theme="b">Cancel job</button>
-          <button id="job-resubmit" data-theme="b">Resubmit job</button>
-          <button id="job-pause" data-theme="b">Pause job</button>
-          <button id="job-resume" data-theme="b">Resume job</button>
-        </div>
-        <div class="ui-block-c"></div>
-      </fieldset>
-    </div>
-  </div>
-
-  <div id="peer-store" style="display:none;" class="ui-body-c">
-    <p align="center"><b>Sending to Orthanc peer...</b></p>
-    <p><img src="libs/images/ajax-loader.gif" alt="" /></p>
-  </div>
-
-  <div id="dicom-store" style="display:none;" class="ui-body-c">
-    <p align="center"><b>Sending to DICOM modality...</b></p>
-    <p><img src="libs/images/ajax-loader.gif" alt="" /></p>
-  </div>
-
-  <div id="info-retrieve" style="display:none;" class="ui-body-c">
-    <p align="center"><b>Retrieving images from DICOM modality...</b></p>
-    <p><img src="libs/images/ajax-loader.gif" alt="" /></p>
-  </div>
-
-  <div id="dialog" style="display:none">
-  </div>
-
-  <div id="template-insecure" style="display:none">
-    <div class="warning-insecure ui-body ui-body-e">
-      <h1>Insecure setup</h1>
-      <p>
-        Your Orthanc server is accepting remote connections, but is
-	using the default username and password, or has user
-	authentication explicitly turned off. Please carefully read
-	your logs and review your configuration, especially
-	options <tt>RemoteAccessAllowed</tt>, <tt>AuthenticationEnabled</tt>,
-	and <tt>RegisteredUsers</tt>.
-      </p>
-    </div>
-  </div>
 </body>
 
 </html>

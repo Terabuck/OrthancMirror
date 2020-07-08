@@ -71,13 +71,13 @@ $('#query-retrieve').live('pagebeforeshow', function() {
 
   targetDate = $('#qr-date');
   $('option', targetDate).remove();
-  targetDate.append($('<option>').attr('value', '').text('Any date'));
-  targetDate.append($('<option>').attr('value', GenerateDicomDate(0)).text('Today'));
-  targetDate.append($('<option>').attr('value', GenerateDicomDate(-1)).text('Yesterday'));
-  targetDate.append($('<option>').attr('value', GenerateDicomDate(-7) + '-').text('Last 7 days'));
-  targetDate.append($('<option>').attr('value', GenerateDicomDate(-31) + '-').text('Last 31 days'));
-  targetDate.append($('<option>').attr('value', GenerateDicomDate(-31 * 3) + '-').text('Last 3 months'));
-  targetDate.append($('<option>').attr('value', GenerateDicomDate(-365) + '-').text('Last year'));
+  targetDate.append($('<option>').attr('value', '*').text('{{ "Any date" | translate }}'));
+  targetDate.append($('<option>').attr('value', GenerateDicomDate(0)).text('{{ "Today" | translate }}'));
+  targetDate.append($('<option>').attr('value', GenerateDicomDate(-1)).text('{{ "Yesterday" | translate }}'));
+  targetDate.append($('<option>').attr('value', GenerateDicomDate(-7) + '-').text('{{ "Last 7 days" | translate }}'));
+  targetDate.append($('<option>').attr('value', GenerateDicomDate(-31) + '-').text('{{ "Last 31 days" | translate }}'));
+  targetDate.append($('<option>').attr('value', GenerateDicomDate(-31 * 3) + '-').text('{{ "Last 3 months" | translate }}'));
+  targetDate.append($('<option>').attr('value', GenerateDicomDate(-365) + '-').text('{{ "Last year" | translate }}'));
   targetDate.selectmenu('refresh');
 });
 
@@ -195,21 +195,21 @@ $('#query-retrieve-2').live('pagebeforeshow', function() {
 
               var content = ($('<div>')
                              .append($('<h3>').text(study['PatientID'] + ' - ' + study['PatientName']))
-                             .append($('<p>').text('Accession number: ')
+                             .append($('<p>').text('{{ "Accession number: " | translate }}')
                                      .append($('<b>').text(study['AccessionNumber'])))
-                             .append($('<p>').text('Birth date: ')
+                             .append($('<p>').text('{{ "Birth date: " | translate }}')
                                      .append($('<b>').text(study['PatientBirthDate'])))
-                             .append($('<p>').text('Patient sex: ')
+                             .append($('<p>').text('{{ "Patient sex: " | translate }}')
                                      .append($('<b>').text(study['PatientSex'])))
-                             .append($('<p>').text('Study description: ')
+                             .append($('<p>').text('{{ "Study description: " | translate }}')
                                      .append($('<b>').text(study['StudyDescription'])))
-                             .append($('<p>').text('Study date: ')
+                             .append($('<p>').text('{{ "Study date: " | translate }}')
                                      .append($('<b>').text(FormatDicomDate(study['StudyDate'])))));
 
               var info = $('<a>').attr('href', series).html(content);
               
               var answerId = answers[i];
-              var retrieve = $('<a>').text('Retrieve all study').click(function() {
+              var retrieve = $('<a>').text('{{ "Retrieve all study" | translate }}').click(function() {
                 ChangePage('query-retrieve-4', {
                   'query' : pageData.uuid,
                   'answer' : answerId,
@@ -238,10 +238,10 @@ $('#query-retrieve-3').live('pagebeforeshow', function() {
     query = {
       'Level' : 'Series',
       'Query' : {
-        'Modality' : '',
-        'ProtocolName' : '',
-        'SeriesDescription' : '',
-        'SeriesInstanceUID' : '',
+        'Modality' : '*',
+        'ProtocolName' : '*',
+        'SeriesDescription' : '*',
+        'SeriesInstanceUID' : '*',
         'StudyInstanceUID' : pageData.uuid
       }
     };
@@ -276,11 +276,11 @@ $('#query-retrieve-3').live('pagebeforeshow', function() {
                 success: function(series) {
                   var content = ($('<div>')
                                  .append($('<h3>').text(series['SeriesDescription']))
-                                 .append($('<p>').text('Modality: ')
+                                 .append($('<p>').text('{{ "Modality: " | translate }}')
                                          .append($('<b>').text(series['Modality'])))
-                                 .append($('<p>').text('ProtocolName: ')
+                                 .append($('<p>').text('{{ "Protocol Name: " | translate }}')
                                          .append($('<b>').text(series['ProtocolName']))));
-
+                  // there was a missing space in the original ProtocolName: 
                   var info = $('<a>').html(content);
 
                   var answerId = answers[i];

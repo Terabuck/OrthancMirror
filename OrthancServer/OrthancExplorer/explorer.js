@@ -37,7 +37,7 @@
 // Forbid the access to IE
 if ($.browser.msie)
 {
-  alert("Please use Mozilla Firefox or Google Chrome. Microsoft Internet Explorer is not supported.");
+    alert('{{ "Please use Mozilla Firefox or Google Chrome. Microsoft Internet Explorer is not supported." | translate }}');
 }
 
 // http://jquerymobile.com/demos/1.1.0/docs/api/globalconfig.html
@@ -327,10 +327,10 @@ function FormatMainDicomTags(target, tags, tagsToIgnore)
         v = SplitLongUid(v);
       }
       else if (i == "ImagePositionPatient" ||
-               i == "ImageOrientationPatient")
-      {
-        v = FormatFloatSequence(v);
-      }
+      i == "ImageOrientationPatient")
+{
+v = FormatFloatSequence(v);
+}
       
       target.append($('<p>')
                     .text(i + ': ')
@@ -401,7 +401,7 @@ function FormatSeries(series, link, isReverse)
   node = $('<div>')
       .append($('<h3>').text(series.MainDicomTags.SeriesDescription))
       .append($('<p>').append($('<em>')
-                           .text('Status: ')
+                           .text('{{ "Status: " | translate }}')
                            .append($('<strong>').text(series.Status))));
 
   FormatMainDicomTags(node, series.MainDicomTags, [ 
@@ -419,7 +419,7 @@ function FormatSeries(series, link, isReverse)
 
 function FormatInstance(instance, link, isReverse)
 {
-  var node = $('<div>').append($('<h3>').text('Instance: ' + instance.IndexInSeries));
+  var node = $('<div>').append($('<h3>').text('{{ "Instance: " | translate }}' + instance.IndexInSeries));
 
   FormatMainDicomTags(node, instance.MainDicomTags, [
     "AcquisitionNumber", 
@@ -464,13 +464,13 @@ $('#lookup').live('pagebeforeshow', function() {
   // NB: "GenerateDicomDate()" is defined in "query-retrieve.js"
   var target = $('#lookup-study-date');
   $('option', target).remove();
-  target.append($('<option>').attr('value', '').text('Any date'));
-  target.append($('<option>').attr('value', GenerateDicomDate(0)).text('Today'));
-  target.append($('<option>').attr('value', GenerateDicomDate(-1)).text('Yesterday'));
-  target.append($('<option>').attr('value', GenerateDicomDate(-7) + '-').text('Last 7 days'));
-  target.append($('<option>').attr('value', GenerateDicomDate(-31) + '-').text('Last 31 days'));
-  target.append($('<option>').attr('value', GenerateDicomDate(-31 * 3) + '-').text('Last 3 months'));
-  target.append($('<option>').attr('value', GenerateDicomDate(-365) + '-').text('Last year'));
+  target.append($('<option>').attr('value', '*').text('{{ "Any date" | translate }}'));
+  target.append($('<option>').attr('value', GenerateDicomDate(0)).text('{{ "Today" | translate }}'));
+  target.append($('<option>').attr('value', GenerateDicomDate(-1)).text('{{ "Yesterday" | translate }}'));
+  target.append($('<option>').attr('value', GenerateDicomDate(-7) + '-').text('{{ "Last 7 days" | translate }}'));
+  target.append($('<option>').attr('value', GenerateDicomDate(-31) + '-').text('{{ "Last 31 days" | translate }}'));
+  target.append($('<option>').attr('value', GenerateDicomDate(-31 * 3) + '-').text('{{ "Last 3 months" | translate }}'));
+  target.append($('<option>').attr('value', GenerateDicomDate(-365) + '-').text('{{ "Last year" | translate }}'));
   target.selectmenu('refresh');
 
   $('#lookup-result').hide();
@@ -518,7 +518,7 @@ $('#lookup-submit').live('click', function() {
     dataType: 'json',
     async: false,
     error: function() {
-      alert('Error during lookup');
+      alert('{{ "Error during lookup" | translate }}');
     },
     success: function(studies) {
       FormatListOfStudies('#lookup-result ul', '#lookup-alert', '#lookup-count', studies);
@@ -660,7 +660,7 @@ function RefreshPatient()
 
         $('#patient-info li').remove();
         $('#patient-info')
-          .append('<li data-role="list-divider">Patient</li>')
+          .append('<li data-role="list-divider">{{ "Patient" | translate }}</li>')
           .append(FormatPatient(patient))
           .listview('refresh');
 
@@ -719,9 +719,9 @@ function RefreshStudy()
           $('#study .patient-link').attr('href', '#patient?uuid=' + patient.ID);
           $('#study-info li').remove();
           $('#study-info')
-            .append('<li data-role="list-divider">Patient</li>')
+            .append('<li data-role="list-divider">{{ "Patient" | translate }}</li>')
             .append(FormatPatient(patient, '#patient?uuid=' + patient.ID, true))
-            .append('<li data-role="list-divider">Study</li>')
+            .append('<li data-role="list-divider">{{ "Study" | translate }}</li>')
             .append(FormatStudy(study))
             .listview('refresh');
 
@@ -769,11 +769,11 @@ function RefreshSeries()
 
             $('#series-info li').remove();
             $('#series-info')
-              .append('<li data-role="list-divider">Patient</li>')
+              .append('<li data-role="list-divider">{{ "Patient" | translate }}</li>')
               .append(FormatPatient(patient, '#patient?uuid=' + patient.ID, true))
-              .append('<li data-role="list-divider">Study</li>')
+              .append('<li data-role="list-divider">{{ "Study" | translate }}</li>')
               .append(FormatStudy(study, '#study?uuid=' + study.ID, true))
-              .append('<li data-role="list-divider">Series</li>')
+              .append('<li data-role="list-divider">{{ "Series" | translate }}</li>')
               .append(FormatSeries(series))
               .listview('refresh');
 
@@ -888,13 +888,13 @@ function RefreshInstance()
             
             $('#instance-info li').remove();
             $('#instance-info')
-              .append('<li data-role="list-divider">Patient</li>')
+              .append('<li data-role="list-divider">{{ "Patient" | translate }}</li>')
               .append(FormatPatient(patient, '#patient?uuid=' + patient.ID, true))
-              .append('<li data-role="list-divider">Study</li>')
+              .append('<li data-role="list-divider">{{ "Study" | translate }}</li>')
               .append(FormatStudy(study, '#study?uuid=' + study.ID, true))
-              .append('<li data-role="list-divider">Series</li>')
+              .append('<li data-role="list-divider">{{ "Series" | translate }}</li>')
               .append(FormatSeries(series, '#series?uuid=' + series.ID, true))
-              .append('<li data-role="list-divider">Instance</li>')
+              .append('<li data-role="list-divider">{{ "Instance" | translate }}</li>')
               .append(FormatInstance(instance))
               .listview('refresh');
 
@@ -1426,7 +1426,7 @@ $('#jobs').live('pagebeforeshow', function() {
   $.ajax({
     url: '../jobs?expand',
     dataType: 'json',
-    async: false,
+    async: false, 
     cache: false,
     success: function(jobs) {
       var target = $('#all-jobs');

@@ -1,0 +1,15 @@
+{
+    "Error: The C-Echo has failed!": "त्रुटि: सी-इको विफल रहा है!",
+    "The C-Echo has succeeded!": "सी-इको सफल रहा है!",
+    "Echo result": "इको परिणाम",
+    "Error during query (C-Find)": "क्वेरी के दौरान त्रुटि (सी-फाइंड)",
+    "Accession number: ": "परिग्रहण संख्या: ",
+    "Birth date: ": "जन्म तिथि: ",
+    "Patient sex: ": "रोगी सेक्स: ",
+    "Study description: ": "अध्ययन विवरण: ",
+    "Study date: ": "अध्ययन की तारीख: ",
+    "Retrieve all study": "सभी अध्ययन पुनः प्राप्त करें",
+    "Modality: ": "साधन: ",
+    "Protocol Name: ": "प्रोटोकॉल का नाम: ",
+    "Error during retrieve": "पुनः प्राप्त करने के दौरान त्रुटि"
+}

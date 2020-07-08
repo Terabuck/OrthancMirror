@@ -1,0 +1,15 @@
+{
+    "Error: The C-Echo has failed!": "错误：C-Echo 出现故障！",
+    "The C-Echo has succeeded!": "C-Echo 成功了！",
+    "Echo result": "回声结果",
+    "Error during query (C-Find)": "查询期间出错（C-Find）",
+    "Accession number: ": "加入编号：",
+    "Birth date: ": "出生日期：",
+    "Patient sex: ": "患者性别：",
+    "Study description: ": "研究描述：",
+    "Study date: ": "学习日期：",
+    "Retrieve all study": "检索所有研究",
+    "Modality: ": "模态：",
+    "Protocol Name: ": "协议名称：",
+    "Error during retrieve": "检索期间出错"
+}

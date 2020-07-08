@@ -1,0 +1,15 @@
+{
+    "Error: The C-Echo has failed!": "Ошибка: C-Echo не удалось!",
+    "The C-Echo has succeeded!": "C-Echo преуспел!",
+    "Echo result": "Результат эха",
+    "Error during query (C-Find)": "Ошибка во время запроса (C-Find)",
+    "Accession number: ": "Номер присоединения: ",
+    "Birth date: ": "Дата обучения: ",
+    "Patient sex: ": "Имя пациента: ",
+    "Study description: ": "Описание исследования: ",
+    "Study date: ": "Дата обучения: ",
+    "Retrieve all study": "Получить все исследования",
+    "Modality: ": "Модальности: ",
+    "Protocol Name: ": "Название протокола: ",
+    "Error during retrieve": "Ошибка при извлечении"
+}

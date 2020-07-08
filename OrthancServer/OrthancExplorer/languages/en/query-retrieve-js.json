@@ -1,0 +1,15 @@
+{
+    "Error: The C-Echo has failed!": "Error: The C-Echo has failed!",
+    "The C-Echo has succeeded!": "The C-Echo has succeeded!",
+    "Echo result": "Echo result",
+    "Error during query (C-Find)": "Error during query (C-Find)",
+    "Accession number: ": "Accession number: ",
+    "Birth date: ": "Birth date: ",
+    "Patient sex: ": "Patient sex: ",
+    "Study description: ": "Study description: ",
+    "Study date: ": "Study date: ",
+    "Retrieve all study": "Retrieve all study",
+    "Modality: ": "Modality: ",
+    "Protocol Name: ": "Protocol Name: ",
+    "Error during retrieve": "Error during retrieve"
+}

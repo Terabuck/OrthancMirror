@@ -1,0 +1,15 @@
+{
+    "Error: The C-Echo has failed!": "Fout: De C-Echo is mislukt!",
+    "The C-Echo has succeeded!": "De C-Echo is geslaagd!",
+    "Echo result": "Echo resultaat",
+    "Error during query (C-Find)": "Fout tijdens query (C-Find)",
+    "Accession number: ": "Toetredingsnummer: ",
+    "Birth date: ": "Geboortedatum: ",
+    "Patient sex: ": "Patiënt seks: ",
+    "Study description: ": "Studiebeschrijving: ",
+    "Study date: ": "Studiedatum: ",
+    "Retrieve all study": "Alle studie ophalen",
+    "Modality: ": "Modaliteit: ",
+    "Protocol Name: ": "Protocolnaam: ",
+    "Error during retrieve": "Fout tijdens ophalen"
+}

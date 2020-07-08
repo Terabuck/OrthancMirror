@@ -1,0 +1,15 @@
+{
+    "Error: The C-Echo has failed!": "Kosa: C-echo imeshindwa!",
+    "The C-Echo has succeeded!": "The C-echo imefanikiwa!",
+    "Echo result": "Matokeo ya echo",
+    "Error during query (C-Find)": "Kosa wakati wa Ulizo (C-Find)",
+    "Accession number: ": "Namba ya nambari: ",
+    "Birth date: ": "Tarehe ya kuzaliwa: ",
+    "Patient sex: ": "Ngono ya mgonjwa: ",
+    "Study description: ": "Maelezo ya utafiti: ",
+    "Study date: ": "Tarehe ya somo: ",
+    "Retrieve all study": "Kuepua masomo yote",
+    "Modality: ": "Kwa: ",
+    "Protocol Name: ": "Jina la Protokali: ",
+    "Error during retrieve": "Kosa wakati wa kuepua"
+}

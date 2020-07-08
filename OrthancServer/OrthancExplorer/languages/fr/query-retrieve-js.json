@@ -1,0 +1,15 @@
+{
+    "Error: The C-Echo has failed!": "Erreur : le C-Echo a échoué !",
+    "The C-Echo has succeeded!": "Le C-Echo a réussi !",
+    "Echo result": "Résultat écho",
+    "Error during query (C-Find)": "Erreur pendant la requête (C-Find)",
+    "Accession number: ": "Numéro d’adhésion : ",
+    "Birth date: ": "Date de naissance : ",
+    "Patient sex: ": "Sexe du patient : ",
+    "Study description: ": "Description de l’étude : ",
+    "Study date: ": "Date de l’étude : ",
+    "Retrieve all study": "Récupérer toutes les études",
+    "Modality: ": "Modalité : ",
+    "Protocol Name: ": "Nom du protocole : ",
+    "Error during retrieve": "Erreur lors de la récupération"
+}
